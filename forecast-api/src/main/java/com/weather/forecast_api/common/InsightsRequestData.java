@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ForecastRequestData {
+public class InsightsRequestData {
 
     private ForecastCondition condition;
     private double latitude;
