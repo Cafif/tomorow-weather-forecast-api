@@ -5,8 +5,6 @@ import com.weather.forecast_api.common.InsightsResult;
 import com.weather.forecast_api.common.utils.ForecastCondition;
 import com.weather.forecast_api.services.ForecastInsightsService;
 import com.weather.forecast_api.services.ForecastUploadService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/weather")
 public class ForecastController {
 
-    private static final Logger log = LoggerFactory.getLogger(ForecastController.class);
     @Autowired
     private ForecastInsightsService forecastInsightsService;
     @Autowired
@@ -25,7 +22,7 @@ public class ForecastController {
 
 
     @GetMapping("/insight")
-    public ResponseEntity<String> handleForecastInsightsRequest(@RequestParam String condition, @RequestParam String lat, @RequestParam String lon) {
+    public ResponseEntity<String> getForecastInsights(@RequestParam String condition, @RequestParam String lat, @RequestParam String lon) {
         try {
             InsightsRequestData insightsRequestData = createRequestData(condition, lat, lon);
 
@@ -45,24 +42,29 @@ public class ForecastController {
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
+        }
+
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
 
         }
     }
 
 
-    @PostMapping("/upload-forecast-csv")
-    public ResponseEntity<String> loadCSVFile(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please upload a file");
+    @PostMapping("/upload-csv")
+    public ResponseEntity<String> uploadForecastsCSV(@RequestParam("file") MultipartFile file) {
+        try {
+            forecastUploadService.processAndUploadForecastsCSVFile(file);
+            return ResponseEntity.status(HttpStatus.CREATED).body("CSV File uploaded successfully");
         }
 
-        try {
-            forecastUploadService.processCSVFile(file);
-            return ResponseEntity.status(HttpStatus.CREATED).body("CSV File uploaded successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload CSV file: " + e.getMessage());
+
+        catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred. Failed to upload CSV file");
         }
     }
 

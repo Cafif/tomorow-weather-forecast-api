@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 
-import java.util.Comparator;
 import java.util.Date;
 
 @Data

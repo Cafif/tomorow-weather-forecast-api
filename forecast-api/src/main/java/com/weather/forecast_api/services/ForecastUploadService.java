@@ -1,6 +1,5 @@
 package com.weather.forecast_api.services;
 
-import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
@@ -12,18 +11,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ForecastUploadService {
 
+    public static final String TEXT_CSV_FORMAT = "text/csv";
     @Autowired
     ForecastRepository forecastRepository;
-    ObjectReader forecastIter = new CsvMapper().readerWithTypedSchemaFor(Forecast.class);;
 
-    public void processCSVFile(MultipartFile file) throws IOException {
+    public void processAndUploadForecastsCSVFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
-            throw new IllegalArgumentException("Uploaded file is empty");
+            throw new IllegalArgumentException("File is missing or empty");
         }
+        if (!Objects.equals(file.getContentType(), TEXT_CSV_FORMAT)) {
+            throw new IllegalArgumentException("Incorrect file type. Please upload a CSV file.");
+        }
+
         CsvMapper csvMapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
 
