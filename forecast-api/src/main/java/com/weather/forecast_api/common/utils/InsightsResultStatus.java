@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 public enum InsightsResultStatus {
 
     SUCCESS,
-    FAILURE,
+    NOT_FOUND,
     ERROR
 
 }

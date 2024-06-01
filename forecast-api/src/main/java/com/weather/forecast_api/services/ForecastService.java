@@ -5,12 +5,12 @@ import com.weather.forecast_api.common.InsightsResult;
 import com.weather.forecast_api.common.entities.Forecast;
 import com.weather.forecast_api.common.utils.ForecastDateComparator;
 import com.weather.forecast_api.common.utils.ForecastInsight;
+import com.weather.forecast_api.common.utils.InsightsResultStatus;
 import com.weather.forecast_api.repositories.ForecastRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ForecastService {
@@ -23,14 +23,19 @@ public class ForecastService {
 
         InsightsResult insightsResult = new InsightsResult();
 
-        List<Forecast> matchingForecasts =  forecastRepository.findByLatitudeAndLongitude(requestData.getLatitude(), requestData.getLongitude());
+        List<Forecast> locationMatchingForecasts =  forecastRepository.findByLatitudeAndLongitude(requestData.getLatitude(), requestData.getLongitude());
 
-        List<ForecastInsight> forecastInsights = matchingForecasts.stream()
+        if(locationMatchingForecasts.isEmpty()){
+            insightsResult.setInsightsResultStatus(InsightsResultStatus.NOT_FOUND);
+            return insightsResult;
+        }
+        List<ForecastInsight> forecastInsights = locationMatchingForecasts.stream()
                 .sorted(forecastDateComparator)
                 .map(forecast -> new ForecastInsight(forecast, requestData.getCondition().checkCondition(forecast)))
                 .toList();
 
         insightsResult.setForecastInsights(forecastInsights);
+        insightsResult.setInsightsResultStatus(InsightsResultStatus.SUCCESS);
 
         return insightsResult;
     }

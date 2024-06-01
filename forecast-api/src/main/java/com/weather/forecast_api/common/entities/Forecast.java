@@ -1,7 +1,6 @@
 package com.weather.forecast_api.common.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 
@@ -12,9 +11,11 @@ import java.util.Date;
 @Entity
 @Table(name = "forecast")
 public class Forecast {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String longitude;
-    private String latitude;
+    private double longitude;
+    private double latitude;
     private Date forecastTimestamp;
     private double temp;
     private double precipitation;

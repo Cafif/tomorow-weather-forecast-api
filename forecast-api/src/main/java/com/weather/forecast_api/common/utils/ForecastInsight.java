@@ -9,4 +9,13 @@ import lombok.Data;
 public class ForecastInsight {
     private Forecast forecast;
     private boolean matchesCondition;
+
+    @Override
+    public String toString() {
+        return String.format(
+                "{\n  \"forecastTime\": \"%s\",\n  \"conditionMet\": %b\n}",
+                forecast.getForecastTimestamp().toInstant().toString(),
+                matchesCondition
+        );
+    }
 }
