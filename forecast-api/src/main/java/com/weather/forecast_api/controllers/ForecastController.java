@@ -3,17 +3,15 @@ package com.weather.forecast_api.controllers;
 import com.weather.forecast_api.common.InsightsRequestData;
 import com.weather.forecast_api.common.InsightsResult;
 import com.weather.forecast_api.common.utils.ForecastCondition;
-import com.weather.forecast_api.common.utils.ForecastInsight;
-import com.weather.forecast_api.common.utils.InsightsResultStatus;
-import com.weather.forecast_api.services.ForecastService;
+import com.weather.forecast_api.services.ForecastInsightsService;
+import com.weather.forecast_api.services.ForecastUploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/weather")
@@ -21,7 +19,9 @@ public class ForecastController {
 
     private static final Logger log = LoggerFactory.getLogger(ForecastController.class);
     @Autowired
-    private ForecastService forecastService;
+    private ForecastInsightsService forecastInsightsService;
+    @Autowired
+    private ForecastUploadService forecastUploadService;
 
 
     @GetMapping("/insight")
@@ -29,7 +29,7 @@ public class ForecastController {
         try {
             InsightsRequestData insightsRequestData = createRequestData(condition, lat, lon);
 
-            InsightsResult insightsResult = forecastService.handleInsightsRequest(insightsRequestData);
+            InsightsResult insightsResult = forecastInsightsService.handleInsightsRequest(insightsRequestData);
 
             switch (insightsResult.getInsightsResultStatus()){
                 case SUCCESS:
@@ -48,6 +48,21 @@ public class ForecastController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
 
+        }
+    }
+
+
+    @PostMapping("/upload-forecast-csv")
+    public ResponseEntity<String> loadCSVFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Please upload a file");
+        }
+
+        try {
+            forecastUploadService.processCSVFile(file);
+            return ResponseEntity.status(HttpStatus.CREATED).body("CSV File uploaded successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload CSV file: " + e.getMessage());
         }
     }
 

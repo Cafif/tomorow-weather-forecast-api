@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ForecastService {
+public class ForecastInsightsService {
 
     @Autowired
     private ForecastRepository forecastRepository;
