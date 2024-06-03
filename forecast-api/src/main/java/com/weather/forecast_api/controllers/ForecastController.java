@@ -3,6 +3,7 @@ package com.weather.forecast_api.controllers;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.weather.forecast_api.common.InsightsRequestData;
 import com.weather.forecast_api.common.InsightsResult;
+import com.weather.forecast_api.common.entities.Forecast;
 import com.weather.forecast_api.common.utils.ForecastCondition;
 import com.weather.forecast_api.services.ForecastInsightsService;
 import com.weather.forecast_api.services.ForecastUploadService;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/weather")
@@ -55,8 +58,8 @@ public class ForecastController {
     @PostMapping("/upload-csv")
     public ResponseEntity<String> uploadForecastsCSV(@RequestParam("file") MultipartFile file) {
         try {
-            forecastUploadService.processAndUploadForecastsCSVFile(file);
-            return ResponseEntity.status(HttpStatus.CREATED).body("CSV File uploaded successfully");
+            List<Forecast> addedForecasts = forecastUploadService.processAndUploadForecastsCSVFile(file);
+            return ResponseEntity.status(HttpStatus.CREATED).body(String.format("CSV File uploaded successfully, %s forecasts added",addedForecasts.size()));
         }
 
 

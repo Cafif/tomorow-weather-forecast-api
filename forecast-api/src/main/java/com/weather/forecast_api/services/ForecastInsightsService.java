@@ -7,6 +7,7 @@ import com.weather.forecast_api.common.utils.ForecastDateComparator;
 import com.weather.forecast_api.common.utils.ForecastInsight;
 import com.weather.forecast_api.common.utils.InsightsResultStatus;
 import com.weather.forecast_api.repositories.ForecastRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,10 @@ public class ForecastInsightsService {
     @Autowired
     private ForecastRepository forecastRepository;
     private final ForecastDateComparator forecastDateComparator = new ForecastDateComparator();
+
+    public ForecastInsightsService(ForecastRepository forecastRepository){
+        this.forecastRepository = forecastRepository;
+    }
 
     public InsightsResult handleInsightsRequest(InsightsRequestData requestData){
 

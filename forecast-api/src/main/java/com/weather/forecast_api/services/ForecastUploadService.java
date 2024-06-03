@@ -5,13 +5,11 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.weather.forecast_api.common.entities.Forecast;
 import com.weather.forecast_api.repositories.ForecastRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +20,11 @@ public class ForecastUploadService {
     @Autowired
     ForecastRepository forecastRepository;
 
-    public void processAndUploadForecastsCSVFile(MultipartFile file) throws IOException {
+    public ForecastUploadService(ForecastRepository forecastRepository) {
+        this.forecastRepository = forecastRepository;
+    }
+
+    public List<Forecast> processAndUploadForecastsCSVFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is missing or empty");
         }
@@ -36,10 +38,7 @@ public class ForecastUploadService {
         ObjectReader objectReader = csvMapper.readerFor(Forecast.class).with(schema);
         List<Forecast> forecasts = objectReader.<Forecast>readValues(file.getInputStream()).readAll();
 
-        for(Forecast forecast: forecasts){
-            forecastRepository.save(forecast);
-        }
         List<Forecast> inserted = forecastRepository.saveAll(forecasts);
-        System.out.print(inserted.size());
+        return inserted;
     }
 }
