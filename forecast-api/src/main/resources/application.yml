@@ -10,7 +10,7 @@ spring:
       max-request-size: 12MB
 
   datasource:
-    jdbc: h2:file:/forecast-api/data/forecastdb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    jdbc: h2:file:./BOOT-INF/classes/data/forecastdb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
     driver-class-name: org.h2.Driver
     username: sa
     password:
