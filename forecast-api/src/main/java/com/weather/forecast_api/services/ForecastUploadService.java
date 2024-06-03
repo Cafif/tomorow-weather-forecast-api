@@ -5,11 +5,13 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.weather.forecast_api.common.entities.Forecast;
 import com.weather.forecast_api.repositories.ForecastRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +36,10 @@ public class ForecastUploadService {
         ObjectReader objectReader = csvMapper.readerFor(Forecast.class).with(schema);
         List<Forecast> forecasts = objectReader.<Forecast>readValues(file.getInputStream()).readAll();
 
-        forecastRepository.saveAll(forecasts);
+        for(Forecast forecast: forecasts){
+            forecastRepository.save(forecast);
+        }
+        List<Forecast> inserted = forecastRepository.saveAll(forecasts);
+        System.out.print(inserted.size());
     }
 }

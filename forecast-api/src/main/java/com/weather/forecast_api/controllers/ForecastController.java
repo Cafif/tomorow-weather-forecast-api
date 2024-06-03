@@ -1,5 +1,6 @@
 package com.weather.forecast_api.controllers;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.weather.forecast_api.common.InsightsRequestData;
 import com.weather.forecast_api.common.InsightsResult;
 import com.weather.forecast_api.common.utils.ForecastCondition;
@@ -62,7 +63,9 @@ public class ForecastController {
         catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
+        catch (UnrecognizedPropertyException e) {
+            return ResponseEntity.badRequest().body("Invalid CSV file format, file is missing or has an unrecognized header row");
+        }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred. Failed to upload CSV file");
         }
