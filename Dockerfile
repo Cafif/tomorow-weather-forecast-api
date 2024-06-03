@@ -1,5 +1,5 @@
 FROM maven:3.8.5-openjdk-17 as BUILD
-COPY ./forecast-api
+COPY ./forecast-api .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
