@@ -4,5 +4,8 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
 COPY --from=build /target/forecast-api-0.0.1-SNAPSHOT.jar forecast-api.jar
+
+RUN ln -s ./forecast-api/src/main/resources/data/forecastdb.mv.db /forecast-api/resources/data/forecastdb.mv.db
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "forecast-api.jar"]
