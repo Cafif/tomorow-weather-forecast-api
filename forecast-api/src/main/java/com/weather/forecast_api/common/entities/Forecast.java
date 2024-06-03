@@ -13,7 +13,7 @@ import java.util.Date;
 public class Forecast {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private int id;
+    private String id;
     @JsonProperty("Longitude")
     private double longitude;
 
