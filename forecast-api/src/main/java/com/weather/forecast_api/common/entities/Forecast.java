@@ -12,8 +12,8 @@ import java.util.Date;
 @Table(name = "forecast")
 public class Forecast {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private int id;
     @JsonProperty("Longitude")
     private double longitude;
 
