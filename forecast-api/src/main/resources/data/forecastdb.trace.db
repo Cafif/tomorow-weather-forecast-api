@@ -1,6 +1,0 @@
-2024-06-03 19:04:29.087766+03:00 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE [*]* FROM FORECAST"; expected "identifier"; SQL statement:
-DELETE * FROM FORECAST [42001-224]
-2024-06-03 19:04:42.521645+03:00 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE [*]* FROM FORECAST"; expected "identifier"; SQL statement:
-DELETE * FROM FORECAST [42001-224]
