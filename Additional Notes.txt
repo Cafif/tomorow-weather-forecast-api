@@ -1,0 +1,18 @@
+Things to optimize / pitfalls in this application:
+
+It seems that free DB providers plans have very strict limitations on insertion queries, therefore
+uploading data to the service takes a lot of time.
+This would not be such an issue in a real PROD deployment.
+
+Although I've dealt with most common errors that can occur,
+there are a few possible scenarios that will return general error messages where ideally I would want a more specific error.
+
+
+Some things that are missing in order to make this service production-ready:
+
+* Store credentials to the DB outside of the code - ENV variables / some other solution such as AWS Secrets..
+* Add logs throughout the application and implement monitoring.
+* Optimize insertion to the DB with specific bulk sizes.
+* Restrict the upload endpoint to specific known senders/authenticated users (?) and possibly the get insights endpoint as well, depending on the use case.
+* Implement more sophisticated error handling.
+* Shift to HTTPS communication.
