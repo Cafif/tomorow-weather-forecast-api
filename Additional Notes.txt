@@ -15,4 +15,3 @@ Some things that are missing in order to make this service production-ready:
 * Optimize insertion to the DB with specific bulk sizes.
 * Restrict the upload endpoint to specific known senders/authenticated users (?) and possibly the get insights endpoint as well, depending on the use case.
 * Implement more sophisticated error handling.
-* Shift to HTTPS communication.
